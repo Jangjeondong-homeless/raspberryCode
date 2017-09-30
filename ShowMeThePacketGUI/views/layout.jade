@@ -1,0 +1,403 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
+    link(rel="stylesheet",href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css")
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel='stylesheet', href='https://www.w3schools.com/w3css/4/w3.css')
+    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.js')
+    link(rel='stylesheet', type='text/css', href='https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.css')
+    meta(charset='utf-8')
+    link(rel='apple-touch-icon', sizes='76x76', href='assets/img/apple-icon.png')
+    link(rel='icon', type='image/png', sizes='96x96', href='assets/img/favicon.png')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge,chrome=1')
+    title Paper Dashboard by Creative Tim
+    meta(content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0', name='viewport')
+    meta(name='viewport', content='width=device-width')
+    // Bootstrap core CSS
+    link(href='assets/css/bootstrap.min.css', rel='stylesheet')
+    // Animation library for notifications
+    link(href='assets/css/animate.min.css', rel='stylesheet')
+    // Paper Dashboard core CSS
+    link(href='assets/css/paper-dashboard.css', rel='stylesheet')
+    // CSS for Demo Purpose, don't include it in your project
+    link(href='assets/css/demo.css', rel='stylesheet')
+    // Fonts and icons
+    link(href='http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css', rel='stylesheet')
+    link(href='https://fonts.googleapis.com/css?family=Muli:400,300', rel='stylesheet', type='text/css')
+    link(href='assets/css/themify-icons.css', rel='stylesheet')
+    link(rel="stylesheet" href="assets/css/hierarchy-view.css")
+    link(rel="stylesheet" href="assets/css/main.css")
+    style.
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+    body
+        .main-panel
+            nav.navbar.navbar-default
+                .container-fluid
+                    .navbar-header
+                        a.navbar-brand(href='#') Jangjeondong Homeless
+            .content
+                #OS_Sidebar.w3-sidebar.w3-bar-block(style='display:none; position:absolute; z-index:10; overflow:scroll; height:400px;')
+                    div
+                        table.table.table-striped(style='margin-left:10px; width:350px')
+                            thead
+                                th
+                                    button.w3-bar-item.w3-button(onclick='w3_close()') OS List　　　     　　　　　　　　×
+                            tbody#internal_os_list
+                .container-fluid
+                    .row
+                        .col-lg-4.col-sm-6
+                            .card
+                                .content
+                                    .row
+                                        .col-xs-5
+                                            .icon-big.icon-warning.text-center
+                                                i.ti-power-off
+                                        .col-xs-7
+                                            .numbers
+                                                p Number of OS
+                                                a(onclick='w3_open()')
+                                                    h5#internal_ip_count 0
+
+                                    .footer
+                                        hr
+                                        .stats
+                                            i.ti-reload
+
+                        .col-lg-4.col-sm-6
+                            .card
+                                .content
+                                    .row
+                                        .col-xs-5
+                                            .icon-big.icon-success.text-center
+                                                i.ti-target
+                                        .col-xs-7
+                                            .numbers
+                                                p Total Input Packet Count
+                                                h5#total_attacked_count 0
+                                    .footer
+                                        hr
+                                        .stats
+                                            i.ti-reload
+
+                        .col-lg-4.col-sm-6
+                            .card
+                                .content
+                                    .row
+                                        .col-xs-5
+                                            .icon-big.icon-danger.text-center
+                                                i.ti-pulse
+                                        .col-xs-7
+                                            .numbers
+                                                p Valid Attacked Count
+                                                h5#valid_attacked_count 0
+                                    .footer
+                                        hr
+                                        .stats
+                                            i.ti-reload
+
+                    .row
+                        .col-md-6
+                            .card
+                                .header
+                                    h4.title Network Condition
+                                .content
+                                    section.basic-style
+                                        #mynetwork
+                        .col-md-6
+                            .card
+                                .header
+                                    h4.title Detected Target OS
+                                .content
+                                    #canvas-holder2(style='height:535px; margin:auto;')
+                                        canvas#chart-area2
+                                    hr
+                                    .stats
+                                        i.ti-timer
+                    .row
+
+                    .row
+                        .col-md-12
+                            .card
+                                .header
+                                    .col_sm_2
+                                        h4.title Valid Detected Packet Log
+                                .content.table-responsive.table-full-width(style='overflow:scroll; height:300px;')
+                                    table.table.table-striped.header-fixed#log_table
+                                        thead.thead-inverse
+                                            tr
+                                                th(style='width:10%') No.log
+                                                th(style='width:10%') OS
+                                                th(style='width:10%') OS-Version
+                                                th(style='width:10%') Org
+                                                th(style='width:30%') Signature Message
+                                                th(style='width:10%') SID
+                                                th(style='width:20%') CVE
+                                        tbody#all_log_tbody
+                    .row
+                        .col-md-12
+                            .card
+                                .header
+                                    .col_sm_2
+                                        h4.title Total Detected Packet Log
+                                .content.table-responsive.table-full-width(style='overflow:scroll; height:300px;')
+                                    table.table.table-striped.header-fixed#total_log_table
+                                        thead.thead-inverse
+                                            tr
+                                                th(style='width:20%') No.log
+                                                th(style='width:50%') Signature Message
+                                                th(style='width:10%') Revision
+                                                th(style='width:10%') SID
+                                                th(style='width:10%') GID
+                                        tbody#detected_attack_log
+
+
+    script(src='/socket.io/socket.io.js')
+    script(src='https://code.jquery.com/jquery-1.11.1.js')
+    script(src='assets/js/jquery-1.10.2.js', type='text/javascript')
+    script(src='assets/js/bootstrap.min.js', type='text/javascript')
+    // Checkbox, Radio & Switch Plugins
+    script(src='assets/js/bootstrap-checkbox-radio.js')
+    // Charts Plugin
+    script(src='assets/js/chartist.min.js')
+    // Notifications Plugin
+    script(src='assets/js/bootstrap-notify.js')
+    // Google Maps Plugin
+    script(type='text/javascript', src='https://maps.googleapis.com/maps/api/js')
+    // Paper Dashboard Core javascript and methods for Demo purpose
+    script(src='assets/js/paper-dashboard.js')
+    // Paper Dashboard DEMO methods, don't include it in your project!
+    script(src='assets/js/demo.js')
+    // 차트 관련 소스
+    script(src='Chart.bundle.js')
+    script(src='utils.js')
+    script(type='text/javascript').
+        $(document).ready(function(){
+
+        });
+    script.
+        var targetOs = {"Linux" : 0, "Windows" : 0, "Mac OS X" : 0, "Solaris" : 0};
+
+        var log_count = 1;
+        var valid_attack_log_count = 1;
+        var nodes = new vis.DataSet([
+            {id: 1, label: 'Root'}
+        ]);
+
+        // create an array with edges
+        var edges = new vis.DataSet([]);
+        // create a network
+        var container = document.getElementById('mynetwork');
+        // provide the data in the vis format
+        var data = {
+            nodes: nodes,
+            edges: edges
+        };
+
+        var options = {
+            autoResize: true,
+            height: '500px',
+            width: '100%',
+            nodes : {
+                color : '#fff'
+            },
+            edges : {
+                color : 'black'
+            }
+        };
+
+        // initialize your network!
+        var network = new vis.Network(container, data, options);
+
+        $(function () {
+            var socket = io();
+            $('form').submit(function () {
+                socket.emit('chat message', $('#m').val());
+                $('#m').val('');
+                return false;
+            });
+
+            socket.on('DATA',function(data){
+
+            });
+
+            socket.on('detected_attack_log', function (data) {
+
+                var dataLength = data.length;
+                for (var i = 0; i < dataLength; i+=4) {
+                    $('#detected_attack_log').prepend('<tr><td style="width:20%;height:65px;">' + (log_count) + '</td>'
+                        + '<td style="width:50%;height:65px;">' + data[i].sig_name + '</td>'
+                        + '<td style="width:10%;height:65px;">' + data[i].sig_rev + '</td>'
+                        + '<td style="width:10%;height:65px;">' + data[i].sig_sid + '</td>'
+                        + '<td style="width:10%;height:65px;">' + data[i].sig_gid + '</td></tr>');
+                    $('#total_attacked_count').text(log_count++);
+                }
+                var tr_length =$('#total_log_table tr').length;
+                if(tr_length > 100) {
+                    for(var j=0; j < tr_length - 100; ++j)
+                        $('#total_log_table > tbody:last > tr:last').remove();
+                }
+            });
+            socket.on('internal_ip_list', function(data){
+                var os_count = data.length;
+
+                $('#internal_ip_count').text(os_count);
+                var nodeIds = nodes.getIds();
+                var nodeIdsLength = nodeIds.length;
+                if (os_count < (nodeIdsLength-1)/2) {
+
+                    var nodeArray = new Array({id: 1, label: 'Root'});
+                    var edgeArray = new Array();
+
+                    for (var i = 0; i < os_count; ++i) {
+
+                        nodeArray.push({id: data[i - 1].ip, label: data[i - 1].ip});
+                        nodeArray.push({id: data[i - 1].ip + 1, label: data[i - 1].os + ' ' + data[i - 1].flavor});
+                        edgeArray.push({from: 1, to: data[i - 1].ip});
+                        edgeArray.push({from: data[i - 1].ip, to: data[i - 1].ip + 1});
+                    }
+                    nodes = new vis.DataSet(nodeArray);
+                    // create an array with edges
+                    edges = new vis.DataSet(edgeArray);
+                    var newData = {
+                        nodes: nodes,
+                        edges: edges
+                    };
+                    // initialize your network!
+                    network = new vis.Network(container, newData, options);
+                } else if(os_count > (nodeIdsLength-1)/2) {
+                    for (var i = 1; i <= os_count; ++i) {
+                        var dataInArray = $.inArray(data[i - 1].ip, nodeIds);
+
+                        if (dataInArray == -1) {
+                            nodes.add([{id: data[i - 1].ip, label: data[i - 1].ip}]);
+                            nodes.add([{id: data[i - 1].ip + 1, label: data[i - 1].os + ' ' + data[i - 1].flavor}]);
+                            edges.add([{from: 1, to: data[i - 1].ip}]);
+                            edges.add([{from: data[i - 1].ip, to: data[i - 1].ip + 1}]);
+                            nodes.update({
+                                id : data[ i-1].ip,
+                                color : 'orange'
+                            });
+                            nodes.update({
+                                id: data[i - 1].ip+1,
+                                color: 'yellow'
+                            });
+                        }
+                    }
+                }
+            });
+            socket.on('total_attacked_count', function(count){
+                //$('#total_attacked_count').text(count);
+            });
+
+            socket.on('valid_attacked_count', function (count) {
+                //$('#valid_attacked_count').text(count);
+            });
+            socket.on('valid_attack_info', function(data) {
+                var dataLength = data.length;
+
+                for (var i = 0; i < dataLength; ++i) {
+                    $('#all_log_tbody').prepend('<tr><td style="width:10%;height:85px;">' + (valid_attack_log_count) + '</td>'
+                        + '<td style="width:10%;height:85px;">' + data[i].os + '</td>'
+                        + '<td style="width:10%;height:85px;">' + data[i].flavor + '</td>'
+                        + '<td style="width:10%;height:85px;">' + data[i].org + '</td>'
+                        + '<td style="width:30%;height:85px;">' + data[i].sig_name + '</td>'
+                        + '<td style="width:10%;height:85px;">' + data[i].sid + '</td>'
+                        + '<td style="width:20%;height:85px;">' + data[i].cve + '</td></tr>');
+                    targetOs[data[i].os]++;
+                    $('#valid_attacked_count').text(valid_attack_log_count++);
+                    addOsData();
+                }
+
+                $('#all_log_tbody:last tr:first').css({
+                    'color':'red',
+                    'font-weight' : 'bold'
+                });
+            });
+
+            socket.on('internal_os_list', function(rows) {
+                var rowLength = rows.length;
+                var os_list_html = '';
+                for(var i=0; i<rowLength; ++i) {
+                    os_list_html += '<tr><td>' + rows[i].os + ' ' + rows[i].flavor + '</td></tr>';
+                }
+                $('#internal_os_list').html(os_list_html);
+            });
+
+            socket.on('log_count', function (rows) {
+                $('#log_count').html(rows);
+            });
+        });
+
+        var config1 = {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [
+                        targetOs["Linux"],
+                        targetOs["Windows"],
+                        targetOs["Mac OS X"],
+                        targetOs["Solaris"],
+                    ],
+                    backgroundColor: [
+                        window.chartColors.red,
+                        window.chartColors.orange,
+                        window.chartColors.yellow,
+                        window.chartColors.green,
+                        window.chartColors.blue,
+                    ],
+                    label: 'Dataset 1'
+                }],
+                labels: [
+                    "Linux",
+                    "Windows",
+                    "Mac OS X",
+                    "Solaris",
+                ]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'right',
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        };
+
+
+        window.onload = function () {
+            var ctx1 = document.getElementById("chart-area2").getContext("2d");
+            window.myDoughnut2 = new Chart(ctx1, config1);
+        };
+
+        function addOsData() {
+            var indexToOs ={ 0 : "Linux", 1 : "Windows", 2 : "Mac OS X", 3 : "Solaris" };
+            config1.data.datasets.forEach(function (dataset) {
+                dataset.data = dataset.data.map((curElement, index) => {
+                        return targetOs[indexToOs[index]];
+                    });
+            });
+            window.myDoughnut2.update();
+        }
+
+        function w3_open() {
+            document.getElementById("OS_Sidebar").style.position = "absolute";
+            document.getElementById("OS_Sidebar").style.right = "37%";
+            document.getElementById("OS_Sidebar").style.width = "30%";
+            document.getElementById("OS_Sidebar").style.display = "block";
+        }
+        function w3_close() {
+            document.getElementById("OS_Sidebar").style.display = "none";
+        }
+
+
